@@ -65,6 +65,17 @@ def update_notes():
     return "done with notes"
 
 
+@app.route('/api/update/hash', methods=['POST'])
+def update_hash():
+    """
+    Used to update the hash
+    """
+    data = jsonify(request.get_json(force=True))
+    hash = json.dumps(data.response[0].decode('utf-8'))
+    with open(user_data_dir("hash.json"), "w") as file:
+        file.write(hash)
+    return "done with hash"
+
 @app.route('/api/read/passes', methods=['GET'])
 def get_passes():
     """
@@ -83,6 +94,16 @@ def get_notes():
     with open(user_data_dir("notes.json"), "r") as file:
         dat = file.read()
         return dat
+
+
+@app.route('/api/read/hash', methods=['GET'])
+def get_hash():
+    """
+    Used to get the hash of user
+    """
+    with open(user_data_dir("hash.json"), "r") as file:
+        hash = file.read()
+        return hash
 
 
 @app.route('/api/getToken', methods=['GET'])
