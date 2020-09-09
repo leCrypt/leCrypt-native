@@ -76,6 +76,7 @@ def update_hash():
         file.write(hash)
     return "done with hash"
 
+
 @app.route('/api/read/passes', methods=['GET'])
 def get_passes():
     """
@@ -124,7 +125,11 @@ def get_lecrypt_devices():
     """
     Used to return a json object with a user, key token and leCrypt devices for refreshing
     """
-    import socket, string, secrets, base64, pyqrcode
+    import socket
+    import string
+    import secrets
+    import base64
+    import pyqrcode
     from errno import ENETUNREACH
 
     try:
@@ -151,7 +156,7 @@ def get_lecrypt_devices():
                 "token": token,
                 "base64qr": data.decode('utf-8')
             })
-            return res 
+            return res
 
     except IOError as e:
         # an IOError exception occurred (socket.error is a subclass)
@@ -159,5 +164,3 @@ def get_lecrypt_devices():
             return "unreachable"
         else:
             raise
-
-
