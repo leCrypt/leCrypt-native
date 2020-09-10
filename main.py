@@ -35,7 +35,10 @@ token_of_the_server = json.dumps({
 
 @app.route('/api')
 def index():
-    res = ' '.join(['/api/update/passes\n', '/api/update/notes\n', '/api/read/passes\n', '/api/read/notes\n'])
+    vals, api, br = ['passes', 'notes', 'hash'], '- /api/', '</br>'
+    updates = [f'{api}update/{i}{br}' for i in vals]
+    reads = [f'{api}read/{i}{br}' for i in vals]
+    res = ''.join(updates) + ''.join(reads) + f'{api}getToken{br}{api}qr_output{br}'
     return res
 
 
@@ -44,12 +47,11 @@ def update_passes():
     """
     Used to update data in passes.json
     """
-
-    data = jsonify(request.get_json(force=True))
-    passes = json.dumps(data.response[0].decode('utf-8'))
+ 
+    passes = json.dumps(jsonify(request.get_json(force=True)).response[0].decode('utf-8'))
     with open(user_data_dir("passes.json"), "w") as file:
         file.write(passes)
-    return "done with passes"
+        return "[200 OK] /update/passes"
 
 
 @app.route('/api/update/notes', methods=['POST'])
@@ -58,11 +60,10 @@ def update_notes():
     Used to update data in notes.json
     """
 
-    data = jsonify(request.get_json(force=True))
-    notes = json.dumps(data.response[0].decode('utf-8'))
+    notes = json.dumps(jsonify(request.get_json(force=True)).response[0].decode('utf-8'))
     with open(user_data_dir("notes.json"), "w") as file:
         file.write(notes)
-    return "done with notes"
+        return "[200 OK] /update/notes"
 
 
 @app.route('/api/update/hash', methods=['POST'])
@@ -70,11 +71,11 @@ def update_hash():
     """
     Used to update the hash
     """
-    data = jsonify(request.get_json(force=True))
-    hash = json.dumps(data.response[0].decode('utf-8'))
+ 
+    hash = json.dumps(jsonify(request.get_json(force=True)).response[0].decode('utf-8'))
     with open(user_data_dir("hash.json"), "w") as file:
         file.write(hash)
-    return "done with hash"
+        return "[200 OK] /update/hash"
 
 
 @app.route('/api/read/passes', methods=['GET'])
@@ -83,8 +84,7 @@ def get_passes():
     Used to get data saved in passes.json
     """
     with open(user_data_dir("passes.json"), "r") as file:
-        dat = file.read()
-        return dat
+        return file.read()
 
 
 @app.route('/api/read/notes', methods=['GET'])
@@ -93,8 +93,7 @@ def get_notes():
     Used to get data saved in notes.json
     """
     with open(user_data_dir("notes.json"), "r") as file:
-        dat = file.read()
-        return dat
+        return file.read()
 
 
 @app.route('/api/read/hash', methods=['GET'])
@@ -103,8 +102,7 @@ def get_hash():
     Used to get the hash of user
     """
     with open(user_data_dir("hash.json"), "r") as file:
-        hash = file.read()
-        return hash
+        return file.read()
 
 
 @app.route('/api/getToken', methods=['GET'])
@@ -113,11 +111,11 @@ def get_token():
     Used to get current token on server
     """
     global token_of_the_server
-    res = token_of_the_server
+    temp = token_of_the_server
     token_of_the_server = json.dumps({
         "token": ""
     })
-    return res
+    return temp
 
 
 @app.route('/api/qr_output', methods=['GET'])
@@ -143,18 +141,17 @@ def get_lecrypt_devices():
         token_of_the_server = json.dumps({
             "token": token
         })
-        jso = json.dumps({
+        qrData = json.dumps({
             "ip": ip,
             "token": token
         })
-        qr = pyqrcode.create(jso.encode('utf-8'))
+        qr = pyqrcode.create(qrData.encode('utf-8'))
         qr.png(user_data_dir('data.png'), scale=6)
-        with open(user_data_dir('data.png'), "rb") as img_file:
-            data = base64.b64encode(img_file.read())
+        with open(user_data_dir('data.png'), "rb") as img_file: 
             res = json.dumps({
                 "ip": ip,
                 "token": token,
-                "base64qr": data.decode('utf-8')
+                "base64qr": base64.b64encode(img_file.read()).decode('utf-8')
             })
             return res
 

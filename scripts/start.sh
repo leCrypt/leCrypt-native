@@ -1,2 +1,2 @@
-export FLASK_APP=../app.py
+export FLASK_APP=../main.py
 /bin/flask run --port=8692
