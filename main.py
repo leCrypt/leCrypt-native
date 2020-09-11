@@ -1,6 +1,6 @@
 #!/usr/bin/python3
-import json
 import os
+import json
 from os import getenv
 from sys import platform
 from pathlib import Path
