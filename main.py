@@ -1,11 +1,15 @@
 #!/usr/bin/python3
 import json
+import os
 from os import getenv
 from sys import platform
 from pathlib import Path
 from flask import Flask, request, jsonify
 
 app = Flask(__name__)
+app.config.update(
+    DEBUG=True,
+)
 
 
 def user_data_dir(file_name):
@@ -161,3 +165,7 @@ def get_lecrypt_devices():
             return "unreachable"
         else:
             raise
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8692))
+    app.run(host='0.0.0.0', port=port)
