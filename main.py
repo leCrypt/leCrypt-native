@@ -51,7 +51,7 @@ def update_passes():
     """
     Used to update data in passes.json
     """
- 
+
     passes = json.dumps(jsonify(request.get_json(force=True)).response[0].decode('utf-8'))
     with open(user_data_dir("passes.json"), "w") as file:
         file.write(passes)
@@ -75,7 +75,7 @@ def update_hash():
     """
     Used to update the hash
     """
- 
+
     hash = json.dumps(jsonify(request.get_json(force=True)).response[0].decode('utf-8'))
     with open(user_data_dir("hash.json"), "w") as file:
         file.write(hash)
@@ -151,7 +151,7 @@ def get_lecrypt_devices():
         })
         qr = pyqrcode.create(qrData.encode('utf-8'))
         qr.png(user_data_dir('data.png'), scale=6)
-        with open(user_data_dir('data.png'), "rb") as img_file: 
+        with open(user_data_dir('data.png'), "rb") as img_file:
             res = json.dumps({
                 "ip": ip,
                 "token": token,
@@ -165,6 +165,7 @@ def get_lecrypt_devices():
             return "unreachable"
         else:
             raise
+
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8692))
