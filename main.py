@@ -130,13 +130,14 @@ def get_stats():
     pn = 0
     with open(user_data_dir("notes.json"), "r") as notes:
         nn = len(json.load(notes)['notes'])
-    
+
     with open(user_data_dir("passes.json"), "r") as passes:
         pn = len(json.load(passes)['passes'])
     return json.dumps({
         "totalPasses": pn,
         "totalNotes": nn
     })
+
 
 @app.route('/api/qr_output', methods=['GET'])
 def get_lecrypt_devices():
