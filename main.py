@@ -16,7 +16,6 @@ def user_data_dir(file_name):
     """
     Get data directory depending upon their kernel
     """
-
     if platform.startswith("win"):
         os_path = getenv("LOCALAPPDATA")
     elif platform.startswith("darwin"):
@@ -52,7 +51,7 @@ def update_passes():
     Used to update data in passes.json
     """
 
-    passes = json.dumps(jsonify(request.get_json(force=True)).response[0].decode('utf-8'))
+    passes = jsonify(request.get_json(force=True)).response[0].decode('utf-8')
     with open(user_data_dir("passes.json"), "w") as file:
         file.write(passes)
         return "[200 OK] /update/passes"
@@ -64,7 +63,7 @@ def update_notes():
     Used to update data in notes.json
     """
 
-    notes = json.dumps(jsonify(request.get_json(force=True)).response[0].decode('utf-8'))
+    notes = jsonify(request.get_json(force=True)).response[0].decode('utf-8')
     with open(user_data_dir("notes.json"), "w") as file:
         file.write(notes)
         return "[200 OK] /update/notes"
@@ -76,7 +75,7 @@ def update_hash():
     Used to update the hash
     """
 
-    hash = json.dumps(jsonify(request.get_json(force=True)).response[0].decode('utf-8'))
+    hash = jsonify(request.get_json(force=True)).response[0].decode('utf-8')
     with open(user_data_dir("hash.json"), "w") as file:
         file.write(hash)
         return "[200 OK] /update/hash"
@@ -121,6 +120,23 @@ def get_token():
     })
     return temp
 
+
+@app.route('/api/getStats', methods=['GET'])
+def get_stats():
+    """
+    Used to get the stats of the password manager
+    """
+    nn = 0
+    pn = 0
+    with open(user_data_dir("notes.json"), "r") as notes:
+        nn = len(json.load(notes)['notes'])
+    
+    with open(user_data_dir("passes.json"), "r") as passes:
+        pn = len(json.load(passes)['passes'])
+    return json.dumps({
+        "totalPasses": pn,
+        "totalNotes": nn
+    })
 
 @app.route('/api/qr_output', methods=['GET'])
 def get_lecrypt_devices():
