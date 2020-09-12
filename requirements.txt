@@ -1,5 +1,4 @@
 flask
-flaskr
 flake8
 pytest
 pyqrcode
